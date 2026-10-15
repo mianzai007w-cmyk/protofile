@@ -6,14 +6,7 @@
   <title>Muhammad Ahsan | Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-        "@splinetool/runtime": "https://unpkg.com/@splinetool/runtime@1.0.17/build/runtime.js"
-      }
-    }
-  </script>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.72/build/spline-viewer.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap');
     
@@ -22,12 +15,12 @@
       background-color: #07090e;
       color: #e2e8f0;
       overflow-x: hidden;
-      cursor: none; /* Hide default cursor for custom cursor */
+      cursor: none; /* Custom interactive cursor */
     }
     
     .font-heading { font-family: 'Space Grotesk', sans-serif; }
 
-    /* Custom Interactive Cursor */
+    /* Custom Cursor Rings */
     #cursor-dot {
       pointer-events: none;
       position: fixed;
@@ -111,7 +104,7 @@
     <!-- Left Column: Content -->
     <div class="lg:col-span-6 space-y-6">
       <div class="inline-flex items-center px-3 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-cyan-300 text-xs tracking-wider uppercase">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping"></span> Available for Hire
+        <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping"></span> Available for Projects
       </div>
 
       <h1 class="font-heading text-4xl sm:text-6xl font-extrabold text-white leading-tight">
@@ -147,10 +140,10 @@
       </div>
     </div>
 
-    <!-- Right Column: Interactive 3D Canvas Scene -->
+    <!-- Right Column: Interactive 3D Model Embed -->
     <div class="lg:col-span-6 flex justify-center items-center h-[420px] sm:h-[500px] w-full relative">
       <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-emerald-500/5 to-transparent rounded-3xl blur-2xl -z-10"></div>
-      <canvas id="spline-canvas" class="w-full h-full rounded-3xl border border-slate-800/80 bg-slate-950/50 shadow-2xl hover-target"></canvas>
+      <spline-viewer url="https://prod.spline.design/6Wnt13W6L7C3u03E/scene.splinecode" class="w-full h-full rounded-3xl border border-slate-800/80 bg-slate-950/50 shadow-2xl hover-target"></spline-viewer>
     </div>
 
   </main>
@@ -160,13 +153,12 @@
     <p>© 2026 Muhammad Ahsan. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase & Interactive Scripts -->
+  <!-- Firebase & Interactive Cursor Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { Application } from '@splinetool/runtime';
 
-    // Firebase Config
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
       authDomain: "reakweb.firebaseapp.com",
@@ -180,7 +172,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Live Firebase Listener
+    // Live Realtime Firebase Sync
     const profileRef = ref(db, 'portfolio/profile');
     onValue(profileRef, (snapshot) => {
       const data = snapshot.val();
@@ -194,11 +186,6 @@
         if(data.email) document.getElementById('link-email').href = "mailto:" + data.email;
       }
     });
-
-    // 3D Interactive Spline Model
-    const canvas3d = document.getElementById('spline-canvas');
-    const splineApp = new Application(canvas3d);
-    splineApp.load('https://prod.spline.design/6Wnt13W6L7C3u03E/scene.splinecode');
 
     // Custom Interactive Cursor
     const dot = document.getElementById('cursor-dot');
@@ -226,7 +213,7 @@
       });
     });
 
-    // Background Particle Animation
+    // Background Particles
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
