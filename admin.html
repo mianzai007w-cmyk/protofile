@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Portfolio Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6 flex flex-col items-center justify-center">
+
+  <div class="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+      <h2 class="text-2xl font-bold text-cyan-400">Portfolio Admin Panel</h2>
+      <a href="index.html" class="text-xs text-slate-400 hover:text-white">← View Site</a>
+    </div>
+
+    <!-- Passkey Prompt Screen -->
+    <div id="auth-box" class="space-y-4">
+      <p class="text-sm text-slate-400">Enter your Admin PIN to unlock editing access:</p>
+      <input type="password" id="pin-input" placeholder="Enter PIN (Default: 123456)" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:border-cyan-500 focus:outline-none" />
+      <button onclick="checkPin()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-xl transition-all">Unlock Admin Panel</button>
+    </div>
+
+    <!-- Editor Form Screen -->
+    <form id="editor-box" class="hidden space-y-4">
+      <div>
+        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
+        <input type="text" id="edit-name" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+      </div>
+
+      <div>
+        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Professional Title</label>
+        <input type="text" id="edit-title" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+      </div>
+
+      <div>
+        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">About Me Bio</label>
+        <textarea id="edit-bio" rows="4" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm"></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">GitHub URL</label>
+          <input type="text" id="edit-github" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">LinkedIn URL</label>
+          <input type="text" id="edit-linkedin" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">TikTok URL</label>
+          <input type="text" id="edit-tiktok" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Contact Email</label>
+          <input type="email" id="edit-email" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+        </div>
+      </div>
+
+      <button type="button" onclick="saveData()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-xl transition-all">
+        Save & Update Portfolio
+      </button>
+
+      <p id="status-msg" class="text-xs text-center text-emerald-400 hidden">Data saved successfully to Firebase!</p>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
+      authDomain: "reakweb.firebaseapp.com",
+      databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
+      projectId: "reakweb",
+      storageBucket: "reakweb.firebasestorage.app",
+      messagingSenderId: "228639861953",
+      appId: "1:228639861953:web:2941663bb550703b61b840"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.checkPin = function() {
+      const pin = document.getElementById('pin-input').value;
+      if (pin === '123456') {
+        document.getElementById('auth-box').classList.add('hidden');
+        document.getElementById('editor-box').classList.remove('hidden');
+        loadData();
+      } else {
+        alert('Incorrect PIN!');
+      }
+    };
+
+    function loadData() {
+      const profileRef = ref(db, 'portfolio/profile');
+      get(profileRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const d = snapshot.val();
+          document.getElementById('edit-name').value = d.name || "Muhammad Ahsan";
+          document.getElementById('edit-title').value = d.title || "Full-Stack Web Developer & UI Creator";
+          document.getElementById('edit-bio').value = d.bio || "Crafting modern, interactive web applications and digital experiences with clean architecture and cutting-edge UI engineering.";
+          document.getElementById('edit-github').value = d.github || "https://github.com";
+          document.getElementById('edit-linkedin').value = d.linkedin || "https://linkedin.com";
+          document.getElementById('edit-tiktok').value = d.tiktok || "https://tiktok.com";
+          document.getElementById('edit-email').value = d.email || "contact@ahsan.com";
+        } else {
+          // Initialize defaults
+          document.getElementById('edit-name').value = "Muhammad Ahsan";
+          document.getElementById('edit-title').value = "Full-Stack Web Developer & UI Creator";
+          document.getElementById('edit-bio').value = "Crafting modern, interactive web applications and digital experiences with clean architecture and cutting-edge UI engineering.";
+        }
+      });
+    }
+
+    window.saveData = function() {
+      const profileRef = ref(db, 'portfolio/profile');
+      set(profileRef, {
+        name: document.getElementById('edit-name').value,
+        title: document.getElementById('edit-title').value,
+        bio: document.getElementById('edit-bio').value,
+        github: document.getElementById('edit-github').value,
+        linkedin: document.getElementById('edit-linkedin').value,
+        tiktok: document.getElementById('edit-tiktok').value,
+        email: document.getElementById('edit-email').value
+      }).then(() => {
+        const msg = document.getElementById('status-msg');
+        msg.classList.remove('hidden');
+        setTimeout(() => msg.classList.add('hidden'), 3000);
+      });
+    };
+  </script>
+</body>
+</html>
