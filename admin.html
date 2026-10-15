@@ -3,68 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard - Portfolio Manager</title>
+  <title>Admin Panel | Muhammad Ahsan</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-6 flex flex-col items-center justify-center">
 
-  <div class="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+  <div class="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
     <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
-      <h2 class="text-2xl font-bold text-cyan-400">Portfolio Admin Panel</h2>
-      <a href="index.html" class="text-xs text-slate-400 hover:text-white">← View Site</a>
+      <h2 class="text-xl font-bold text-cyan-400 flex items-center gap-2">
+        <i class="fa-solid fa-sliders"></i> Portfolio Manager
+      </h2>
+      <a href="index.html" class="text-xs text-slate-400 hover:text-white transition-colors">← View Website</a>
     </div>
 
-    <!-- Passkey Prompt Screen -->
+    <!-- Security Check Screen -->
     <div id="auth-box" class="space-y-4">
-      <p class="text-sm text-slate-400">Enter your Admin PIN to unlock editing access:</p>
-      <input type="password" id="pin-input" placeholder="Enter PIN (Default: 123456)" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:border-cyan-500 focus:outline-none" />
-      <button onclick="checkPin()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-xl transition-all">Unlock Admin Panel</button>
+      <label class="block text-xs uppercase tracking-wider text-slate-400">Admin Passcode</label>
+      <input type="password" id="pin-input" placeholder="Enter password" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:border-cyan-500 focus:outline-none" />
+      <button onclick="checkPin()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-xl transition-all">Unlock Panel</button>
     </div>
 
-    <!-- Editor Form Screen -->
+    <!-- Dashboard Form Screen -->
     <form id="editor-box" class="hidden space-y-4">
       <div>
         <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
-        <input type="text" id="edit-name" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+        <input type="text" id="edit-name" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:border-cyan-500 focus:outline-none" />
       </div>
 
       <div>
         <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Professional Title</label>
-        <input type="text" id="edit-title" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+        <input type="text" id="edit-title" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:border-cyan-500 focus:outline-none" />
       </div>
 
       <div>
         <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">About Me Bio</label>
-        <textarea id="edit-bio" rows="4" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm"></textarea>
+        <textarea id="edit-bio" rows="4" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:border-cyan-500 focus:outline-none"></textarea>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">GitHub URL</label>
-          <input type="text" id="edit-github" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+          <input type="text" id="edit-github" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:border-cyan-500 focus:outline-none" />
         </div>
         <div>
           <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">LinkedIn URL</label>
-          <input type="text" id="edit-linkedin" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+          <input type="text" id="edit-linkedin" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:border-cyan-500 focus:outline-none" />
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">TikTok URL</label>
-          <input type="text" id="edit-tiktok" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+          <input type="text" id="edit-tiktok" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:border-cyan-500 focus:outline-none" />
         </div>
         <div>
           <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Contact Email</label>
-          <input type="email" id="edit-email" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm" />
+          <input type="email" id="edit-email" class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:border-cyan-500 focus:outline-none" />
         </div>
       </div>
 
       <button type="button" onclick="saveData()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-xl transition-all">
-        Save & Update Portfolio
+        Save & Update Site Live
       </button>
 
-      <p id="status-msg" class="text-xs text-center text-emerald-400 hidden">Data saved successfully to Firebase!</p>
+      <p id="status-msg" class="text-xs text-center text-emerald-400 hidden">✓ Updates saved successfully to Firebase!</p>
     </form>
   </div>
 
@@ -87,12 +90,12 @@
 
     window.checkPin = function() {
       const pin = document.getElementById('pin-input').value;
-      if (pin === '123456') {
+      if (pin === 'ahsan0315') {
         document.getElementById('auth-box').classList.add('hidden');
         document.getElementById('editor-box').classList.remove('hidden');
         loadData();
       } else {
-        alert('Incorrect PIN!');
+        alert('Incorrect Password!');
       }
     };
 
@@ -102,17 +105,12 @@
         if (snapshot.exists()) {
           const d = snapshot.val();
           document.getElementById('edit-name').value = d.name || "Muhammad Ahsan";
-          document.getElementById('edit-title').value = d.title || "Full-Stack Web Developer & UI Creator";
-          document.getElementById('edit-bio').value = d.bio || "Crafting modern, interactive web applications and digital experiences with clean architecture and cutting-edge UI engineering.";
+          document.getElementById('edit-title').value = d.title || "Full-Stack Web Developer";
+          document.getElementById('edit-bio').value = d.bio || "Crafting high-performance, modern web applications and interactive digital experiences with clean architecture and responsive UI design.";
           document.getElementById('edit-github').value = d.github || "https://github.com";
           document.getElementById('edit-linkedin').value = d.linkedin || "https://linkedin.com";
           document.getElementById('edit-tiktok').value = d.tiktok || "https://tiktok.com";
           document.getElementById('edit-email').value = d.email || "contact@ahsan.com";
-        } else {
-          // Initialize defaults
-          document.getElementById('edit-name').value = "Muhammad Ahsan";
-          document.getElementById('edit-title').value = "Full-Stack Web Developer & UI Creator";
-          document.getElementById('edit-bio').value = "Crafting modern, interactive web applications and digital experiences with clean architecture and cutting-edge UI engineering.";
         }
       });
     }
