@@ -113,7 +113,7 @@
         </p>
       </div>
 
-      <!-- Feature Badges / Tech Stack -->
+      <!-- Tech Stack Badges -->
       <div class="flex flex-wrap gap-2 pt-1">
         <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-cyan-300 font-mono">HTML5 / CSS3</span>
         <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-emerald-300 font-mono">JavaScript (ES6+)</span>
@@ -139,14 +139,14 @@
       </div>
     </div>
 
-    <!-- Right Column: Unique Interactive 3D Three.js Sphere Model -->
+    <!-- Right Column: Rotating 3D Photo Model -->
     <div class="lg:col-span-6 flex flex-col items-center justify-center relative">
       <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-emerald-500/5 to-transparent rounded-3xl blur-3xl -z-10"></div>
       
       <div class="w-full h-[420px] sm:h-[480px] rounded-3xl border border-slate-800/80 bg-slate-950/60 shadow-2xl relative overflow-hidden flex items-center justify-center">
         <canvas id="three-canvas" class="w-full h-full hover-target"></canvas>
         <div class="absolute bottom-4 left-4 right-4 text-center px-4 py-2 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-800 text-xs text-slate-400">
-          ✨ Interactive 3D Node Sphere — Move mouse to rotate
+          ✨ 3D Rotating Photo Model — Move mouse to tilt
         </div>
       </div>
     </div>
@@ -223,7 +223,7 @@
       });
     });
 
-    // Three.js 3D Interactive Particle Sphere
+    // Three.js 3D Rotating Photo Card
     const canvas = document.getElementById('three-canvas');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
@@ -232,38 +232,45 @@
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    const geometry = new THREE.IcosahedronGeometry(2, 2);
-    const material = new THREE.MeshStandardMaterial({
-      color: 0x38bdf8,
-      wireframe: true,
-      roughness: 0.2,
-      metalness: 0.8
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load('e1ef1009-4f45-4ce9-9cec-0d3bab770b18 (2).jpg', (texture) => {
+      const geometry = new THREE.BoxGeometry(2.8, 3.6, 0.1);
+      const materials = [
+        new THREE.MeshStandardMaterial({ color: 0x0f172a }),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a }),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a }),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a }),
+        new THREE.MeshStandardMaterial({ map: texture, roughness: 0.2, metalness: 0.1 }), // Front picture
+        new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 })
+      ];
+
+      const cardMesh = new THREE.Mesh(geometry, materials);
+      scene.add(cardMesh);
+
+      const light = new THREE.PointLight(0x38bdf8, 30, 50);
+      light.position.set(4, 4, 5);
+      scene.add(light);
+
+      const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+      scene.add(ambient);
+
+      camera.position.z = 6;
+
+      let mouseX = 0, mouseY = 0;
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        cardMesh.rotation.y += 0.005;
+        cardMesh.rotation.y += (mouseX * 0.4 - cardMesh.rotation.y) * 0.05;
+        cardMesh.rotation.x += (-mouseY * 0.4 - cardMesh.rotation.x) * 0.05;
+        renderer.render(scene, camera);
+      }
+      animate();
     });
-    const sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere);
-
-    const light = new THREE.PointLight(0x34d399, 40, 50);
-    light.position.set(5, 5, 5);
-    scene.add(light);
-
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambient);
-
-    camera.position.z = 5;
-
-    let mouseX = 0, mouseY = 0;
-    window.addEventListener('mousemove', (e) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-    });
-
-    function animate() {
-      requestAnimationFrame(animate);
-      sphere.rotation.x += 0.003 + mouseY * 0.01;
-      sphere.rotation.y += 0.005 + mouseX * 0.01;
-      renderer.render(scene, camera);
-    }
-    animate();
 
     window.addEventListener('resize', () => {
       camera.aspect = canvas.clientWidth / canvas.clientHeight;
