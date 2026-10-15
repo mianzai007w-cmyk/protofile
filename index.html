@@ -6,7 +6,13 @@
   <title>Muhammad Ahsan | Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.72/build/spline-viewer.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap');
     
@@ -15,19 +21,17 @@
       background-color: #07090e;
       color: #e2e8f0;
       overflow-x: hidden;
-      cursor: none; /* Custom interactive cursor */
+      cursor: none;
     }
     
     .font-heading { font-family: 'Space Grotesk', sans-serif; }
 
-    /* Custom Cursor Rings */
+    /* Custom Cursor */
     #cursor-dot {
       pointer-events: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 8px;
-      height: 8px;
+      top: 0; left: 0;
+      width: 8px; height: 8px;
       background-color: #38bdf8;
       border-radius: 50%;
       z-index: 9999;
@@ -37,10 +41,8 @@
     #cursor-ring {
       pointer-events: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 36px;
-      height: 36px;
+      top: 0; left: 0;
+      width: 36px; height: 36px;
       border: 2px solid rgba(56, 189, 248, 0.5);
       border-radius: 50%;
       z-index: 9998;
@@ -48,14 +50,13 @@
       transition: transform 0.15s ease-out, width 0.2s, height 0.2s, border-color 0.2s;
     }
 
-    /* Text Gradients & Glassmorphism */
     .text-gradient {
       background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .glass-card {
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
@@ -63,45 +64,34 @@
       border-color: rgba(56, 189, 248, 0.3);
       box-shadow: 0 0 30px -5px rgba(56, 189, 248, 0.2);
     }
-
-    /* Dynamic Canvas */
-    #bg-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body class="relative min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
 
-  <!-- Custom Cursor Elements -->
   <div id="cursor-dot"></div>
   <div id="cursor-ring"></div>
-
-  <!-- Dynamic Particle Canvas -->
-  <canvas id="bg-canvas"></canvas>
 
   <!-- Navigation -->
   <header class="relative z-20 max-w-7xl mx-auto w-full px-6 py-6 flex items-center justify-between">
     <a href="#" class="font-heading text-2xl font-extrabold tracking-wider text-white hover-target">
       AHSAN<span class="text-cyan-400">.</span>
     </a>
-    <div class="flex items-center space-x-6 text-sm font-medium">
-      <a href="admin.html" class="hover-target px-4 py-2 border border-cyan-500/30 rounded-full text-cyan-400 hover:bg-cyan-500/10 transition-all flex items-center space-x-2">
-        <i class="fa-solid fa-lock text-xs"></i>
-        <span>Admin Panel</span>
+    <div class="flex items-center space-x-4">
+      <button onclick="copyProfileLink()" class="hover-target px-4 py-2 border border-slate-700 rounded-full text-xs text-slate-300 hover:border-cyan-400 transition-all flex items-center space-x-2">
+        <i class="fa-solid fa-share-nodes text-cyan-400"></i>
+        <span>Share</span>
+      </button>
+      <a href="admin.html" class="hover-target px-4 py-2 border border-cyan-500/30 rounded-full text-cyan-400 hover:bg-cyan-500/10 transition-all flex items-center space-x-2 text-xs font-medium">
+        <i class="fa-solid fa-lock"></i>
+        <span>Admin</span>
       </a>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <main class="relative z-10 max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center my-auto">
+  <main class="relative z-10 max-w-7xl mx-auto px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center my-auto">
     
-    <!-- Left Column: Content -->
+    <!-- Left Column -->
     <div class="lg:col-span-6 space-y-6">
       <div class="inline-flex items-center px-3 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-cyan-300 text-xs tracking-wider uppercase">
         <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping"></span> Available for Projects
@@ -123,6 +113,15 @@
         </p>
       </div>
 
+      <!-- Feature Badges / Tech Stack -->
+      <div class="flex flex-wrap gap-2 pt-1">
+        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-cyan-300 font-mono">HTML5 / CSS3</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-emerald-300 font-mono">JavaScript (ES6+)</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-cyan-300 font-mono">Tailwind CSS</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-emerald-300 font-mono">Firebase</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-cyan-300 font-mono">Three.js / 3D</span>
+      </div>
+
       <!-- Social Links -->
       <div class="pt-2 flex items-center space-x-4">
         <a id="link-github" href="#" target="_blank" class="hover-target w-12 h-12 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-cyan-400 transition-all">
@@ -140,10 +139,16 @@
       </div>
     </div>
 
-    <!-- Right Column: Interactive 3D Model Embed -->
-    <div class="lg:col-span-6 flex justify-center items-center h-[420px] sm:h-[500px] w-full relative">
-      <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-emerald-500/5 to-transparent rounded-3xl blur-2xl -z-10"></div>
-      <spline-viewer url="https://prod.spline.design/6Wnt13W6L7C3u03E/scene.splinecode" class="w-full h-full rounded-3xl border border-slate-800/80 bg-slate-950/50 shadow-2xl hover-target"></spline-viewer>
+    <!-- Right Column: Unique Interactive 3D Three.js Sphere Model -->
+    <div class="lg:col-span-6 flex flex-col items-center justify-center relative">
+      <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-emerald-500/5 to-transparent rounded-3xl blur-3xl -z-10"></div>
+      
+      <div class="w-full h-[420px] sm:h-[480px] rounded-3xl border border-slate-800/80 bg-slate-950/60 shadow-2xl relative overflow-hidden flex items-center justify-center">
+        <canvas id="three-canvas" class="w-full h-full hover-target"></canvas>
+        <div class="absolute bottom-4 left-4 right-4 text-center px-4 py-2 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-800 text-xs text-slate-400">
+          ✨ Interactive 3D Node Sphere — Move mouse to rotate
+        </div>
+      </div>
     </div>
 
   </main>
@@ -153,12 +158,12 @@
     <p>© 2026 Muhammad Ahsan. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase & Interactive Cursor Scripts -->
+  <!-- Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import * as THREE from 'three';
 
-    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
       authDomain: "reakweb.firebaseapp.com",
@@ -172,7 +177,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Live Realtime Firebase Sync
+    // Live Firebase Sync
     const profileRef = ref(db, 'portfolio/profile');
     onValue(profileRef, (snapshot) => {
       const data = snapshot.val();
@@ -187,7 +192,12 @@
       }
     });
 
-    // Custom Interactive Cursor
+    window.copyProfileLink = function() {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Portfolio link copied to clipboard!');
+    };
+
+    // Custom Cursor Logic
     const dot = document.getElementById('cursor-dot');
     const ring = document.getElementById('cursor-ring');
 
@@ -213,45 +223,53 @@
       });
     });
 
-    // Background Particles
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
+    // Three.js 3D Interactive Particle Sphere
+    const canvas = document.getElementById('three-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    for (let i = 0; i < 35; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 2 + 0.5,
-        dx: (Math.random() - 0.5) * 0.3,
-        dy: (Math.random() - 0.5) * 0.3
-      });
-    }
+    const geometry = new THREE.IcosahedronGeometry(2, 2);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      wireframe: true,
+      roughness: 0.2,
+      metalness: 0.8
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    const light = new THREE.PointLight(0x34d399, 40, 50);
+    light.position.set(5, 5, 5);
+    scene.add(light);
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambient);
+
+    camera.position.z = 5;
+
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-      });
       requestAnimationFrame(animate);
+      sphere.rotation.x += 0.003 + mouseY * 0.01;
+      sphere.rotation.y += 0.005 + mouseX * 0.01;
+      renderer.render(scene, camera);
     }
     animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    });
   </script>
 </body>
 </html>
-1
-1
